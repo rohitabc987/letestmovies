@@ -4,12 +4,20 @@
 function searchMovies() {
     const input = document.getElementById('search').value.toLowerCase();
     const movieContainers = document.querySelectorAll('.pictures');
+    const foundMovies = new Set(); // Set to track unique movie names
+    const foundImages = new Set(); // Set to track unique images
     let result = false;
 
     movieContainers.forEach((container) => {
         const movieName = container.querySelector('.text a').textContent.toLowerCase();
         if (movieName.includes(input)) {
             container.style.display = 'block';
+            foundMovies.add(movieName);
+
+            // Add the image to the Set of unique images
+            const movieImage = container.querySelector('.img').src;
+            foundImages.add(movieImage);
+
             result = true;
         } else {
             container.style.display = 'none';
@@ -30,6 +38,14 @@ function searchMovies() {
         messageElement.textContent = '';
         refreshButton.style.display = 'none';
     }
+
+    // Show only unique images among the found movies
+    const allImages = document.querySelectorAll('.img');
+    allImages.forEach((image) => {
+        if (!foundImages.has(image.src)) {
+            image.parentNode.parentNode.style.display = 'none'; // Hide the container if image is not unique
+        }
+    });
 }
 
 // Function to extract movie data from HTML elements
